@@ -1,4 +1,4 @@
-# 🎮 Documentazione Tecnica Dettagliata - Snake Game Enterprise
+# 🎮 Snake Game
 
 ## 📖 Introduzione Generale
 
