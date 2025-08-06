@@ -2,7 +2,7 @@
 
 ## 📖 Introduzione Generale
 
-Il progetto **Snake Game Enterprise** rappresenta un'implementazione moderna e sofisticata del classico gioco Snake, realizzato seguendo i principi dell'architettura software enterprise e i design pattern più avanzati. Questo sistema è stato progettato non solo per fornire un'esperienza di gioco coinvolgente, ma anche per dimostrare l'applicazione pratica di principi architetturali solidi in un contesto real-world.
+Il progetto **Snake Game Enterprise** rappresenta un'implementazione moderna e sofisticata del classico gioco Snake, realizzato seguendo i principi dell'architettura software enterprise e i design pattern più avanzati. Questo sistema è stato progettato non solo per fornire un'esperienza di gioco coinvolgente, ma anche per dimostrare l'applicazione pratica di principi architetturali solidi in un contesto reale.
 
 L'architettura adottata segue una **Clean Architecture** stratificata, dove ogni livello ha responsabilità specifiche e ben definite. Il sistema è stato costruito utilizzando **.NET 8** e **C# 12**, sfruttando le più recenti innovazioni linguistiche come i costruttori primari, le collection expressions e i pattern matching avanzati.
 
@@ -37,7 +37,7 @@ Il sistema è organizzato secondo una **Layered Architecture** che separa nettam
 
 1. **Inversione delle Dipendenze**: Tutti i layer superiori dipendono dalle astrazioni definite nei layer inferiori
 2. **Separazione delle Responsabilità**: Ogni classe ha un unico scopo ben definito
-3. **Immutabilità**: Ampio utilizzo di Value Objects immutabili e record types
+3. **Immutabilità**: Ampio utilizzo di Value Object immutabili e record type
 4. **Event-Driven Design**: Comunicazione asincrona attraverso eventi di dominio
 5. **Testabilità**: Architettura progettata per facilitare unit testing e integration testing
 
@@ -45,9 +45,9 @@ Il sistema è organizzato secondo una **Layered Architecture** che separa nettam
 
 ## 🎯 Domain Layer - Il Cuore del Business
 
-### Value Objects: Immutabilità e Type Safety
+### Value Object: Immutabilità e Type Safety
 
-Il **Domain Layer** è il fondamento dell'intera architettura, contenendo i concetti di business fondamentali espressi attraverso **Value Objects** immutabili.
+Il **Domain Layer** è il fondamento dell'intera architettura, contenendo i concetti di business fondamentali espressi attraverso **Value Object** immutabili.
 
 #### Position - Coordinate Spaziali Tipizzate
 
@@ -61,16 +61,16 @@ public readonly struct Position(int x, int y) : IEquatable<Position>
 }
 ```
 
-Questa implementazione sfrutta il **primary constructor** di C# 12 per garantire immutabilità fin dalla costruzione. La `Position` non è semplicemente una coppia di interi, ma un concetto di dominio che incapsula:
+Questa implementazione sfrutta il **primary constructor** di C# 12 per garantire l'immutabilità fin dalla costruzione. La `Position` non è semplicemente una coppia di interi, ma un concetto di dominio che incapsula:
 
 - **Semantica spaziale**: Rappresenta una posizione nel campo di gioco
-- **Operazioni matematiche**: Supporta addizione vettoriale attraverso operator overloading
+- **Operazioni matematiche**: Supporta l'addizione vettoriale attraverso operator overloading
 - **Conversioni naturali**: Interoperabilità con tuple native tramite implicit operators
 - **Value semantics**: Equality e hash code basati sui valori, non sui riferimenti
 
-#### Score - Punteggio con Business Rules
+#### Score - Punteggio con Regole di Business
 
-Il Value Object `Score` dimostra come incapsulare business logic direttamente nel dominio:
+Il Value Object `Score` dimostra come incapsulare la business logic direttamente nel dominio:
 
 ```csharp
 public readonly struct Score : IEquatable<Score>, IComparable<Score>
@@ -80,7 +80,7 @@ public readonly struct Score : IEquatable<Score>, IComparable<Score>
     public Score(int value)
     {
         if (value < 0)
-            throw new ArgumentOutOfRangeException(nameof(value), "Score cannot be negative");
+            throw new ArgumentOutOfRangeException(nameof(value), "Score non può essere negativo");
         Value = value;
     }
     
@@ -92,11 +92,11 @@ public readonly struct Score : IEquatable<Score>, IComparable<Score>
 Questa implementazione garantisce che:
 - **Invarianti di dominio**: Un punteggio non può mai essere negativo
 - **Operazioni immutabili**: Ogni modifica produce una nuova istanza
-- **Business methods**: Logica di confronto record incapsulata nel dominio
+- **Metodi di business**: Logica di confronto record incapsulata nel dominio
 
 ### Domain Events - Comunicazione Asincrona
 
-Il sistema implementa il **Domain Events Pattern** per la comunicazione loose-coupled tra componenti:
+Il sistema implementa il **Domain Events Pattern** per la comunicazione disaccoppiata tra componenti:
 
 ```csharp
 public abstract record GameEvent : IGameEvent
@@ -110,10 +110,10 @@ public record LevelUpEvent(int NewLevel) : GameEvent;
 public record CollisionEvent(Position CollisionPosition, string CollisionType) : GameEvent;
 ```
 
-Gli eventi utilizzano **record types** per garantire immutabilità e forniscono:
-- **Tracciabilità**: Ogni evento ha ID univoco e timestamp
-- **Rich data**: Informazioni complete sul contesto dell'evento
-- **Type safety**: Eventi fortemente tipizzati per evitare errori runtime
+Gli eventi utilizzano **record type** per garantire l'immutabilità e forniscono:
+- **Tracciabilità**: Ogni evento ha un ID univoco e un timestamp
+- **Dati ricchi**: Informazioni complete sul contesto dell'evento
+- **Type safety**: Eventi fortemente tipizzati per evitare errori a runtime
 
 ### Repository Pattern - Astrazione della Persistenza
 
@@ -130,7 +130,7 @@ public interface IRecordRepository
 
 Questa astrazione permette di:
 - **Isolare il dominio**: Nessuna dipendenza da specifiche tecnologie di persistenza
-- **Facilitare testing**: Mock facilmente implementabili
+- **Facilitare il testing**: Mock facilmente implementabili
 - **Sostituibilità**: Diverse implementazioni (file, database, cloud) intercambiabili
 
 ---
@@ -152,10 +152,10 @@ public class SnakeGameEngine(
 ```
 
 Il motore implementa un **game loop asincrono** che:
-- **Gestisce sessioni**: Delega la gestione delle singole partite al `GameSessionManager`
-- **Coordina componenti**: Orchestra renderer, audio, input e persistenza
-- **Gestisce lifecycle**: Supporto per start/stop graceful e cancellation token
-- **Error handling**: Gestione robusta degli errori con fallback appropriati
+- **Gestisce le sessioni**: Delega la gestione delle singole partite al `GameSessionManager`
+- **Coordina i componenti**: Orchestra renderer, audio, input e persistenza
+- **Gestisce il ciclo di vita**: Supporto per start/stop graceful e cancellation token
+- **Gestione errori**: Gestione robusta degli errori con fallback appropriati
 
 ### Physics Engine - Rilevamento Collisioni
 
@@ -176,9 +176,9 @@ public class CollisionDetector : ICollisionDetector
 ```
 
 La physics engine sfrutta:
-- **Pure functions**: Metodi senza side effects per predicibile behavior
-- **Optimized algorithms**: Utilizzo efficiente delle equality semantics dei Value Objects
-- **Clear semantics**: Nomi di metodi che esprimono chiaramente l'intent
+- **Pure functions**: Metodi senza side effects per comportamento prevedibile
+- **Algoritmi ottimizzati**: Utilizzo efficiente delle equality semantics dei Value Object
+- **Semantica chiara**: Nomi di metodi che esprimono chiaramente l'intento
 
 ### Snake Entity - Gestione Stato Complesso
 
@@ -203,9 +203,9 @@ public class SnakeShape : ISnakeShape
 ```
 
 Questa implementazione dimostra:
-- **Encapsulation**: Stato interno privato con API pubblica controllata
-- **Defensive copying**: Le proprietà pubbliche restituiscono copie per preservare immutabilità
-- **Efficient operations**: Algoritmi ottimizzati per le operazioni più frequenti
+- **Incapsulamento**: Stato interno privato con API pubblica controllata
+- **Defensive copying**: Le proprietà pubbliche restituiscono copie per preservare l'immutabilità
+- **Operazioni efficienti**: Algoritmi ottimizzati per le operazioni più frequenti
 
 ### Configuration System - Adattabilità Dinamica
 
@@ -231,8 +231,8 @@ public class GameConfig
 
 La configurazione adattiva garantisce:
 - **Scalabilità**: Il gioco si adatta automaticamente a diverse dimensioni del campo
-- **Balance**: Progressione di difficoltà proporzionale alla dimensione del campo
-- **Configurabilità**: Parametri facilmente modificabili per tuning del gameplay
+- **Bilanciamento**: Progressione di difficoltà proporzionale alla dimensione del campo
+- **Configurabilità**: Parametri facilmente modificabili per il tuning del gameplay
 
 ---
 
@@ -240,7 +240,7 @@ La configurazione adattiva garantisce:
 
 ### Application Services - Coordinamento Business Logic
 
-Il **Application Layer** orchestrea i use cases del sistema attraverso services dedicati. Il `ScoreService` esemplifica questa responsabilabilità:
+l' **Application Layer** orchestra gli use case del sistema attraverso servizi dedicati. Lo `ScoreService` esemplifica questa responsabilabilità:
 
 ```csharp
 public sealed class ScoreService(IRecordManager recordManager, IEventAggregator eventAggregator) : IScoreService
@@ -250,7 +250,7 @@ public sealed class ScoreService(IRecordManager recordManager, IEventAggregator 
     public void AddPoints(int points)
     {
         if (points <= 0)
-            throw new ArgumentException("Points must be positive", nameof(points));
+            throw new ArgumentException("I punti devono essere positivi", nameof(points));
 
         _currentScore = _currentScore.Add(points);
         _eventAggregator.Publish(new ScoreChangedEvent(_currentScore.Value));
@@ -270,8 +270,8 @@ public sealed class ScoreService(IRecordManager recordManager, IEventAggregator 
 }
 ```
 
-Il service coordina:
-- **Domain operations**: Utilizza Value Objects per operazioni business
+Il servizio coordina:
+- **Operazioni di dominio**: Utilizza Value Object per operazioni di business
 - **Event publishing**: Notifica cambiamenti attraverso domain events
 - **Cross-cutting concerns**: Integra persistenza e notifiche
 
@@ -299,7 +299,7 @@ Il Command Pattern fornisce:
 - **Macro operations**: Possibilità di comporre comandi complessi
 - **Audit trail**: Tracciamento delle operazioni per debugging
 
-### Event Aggregator - Hub Comunicazione
+### Event Aggregator - Hub di Comunicazione
 
 L'`EnterpriseEventAggregator` implementa un sistema di messaggistica avanzato:
 
@@ -322,12 +322,12 @@ public sealed class EnterpriseEventAggregator : IEventAggregator, IDisposable
 ```
 
 L'event aggregator supporta:
-- **Async processing**: Gestione asincrona degli eventi per performance
-- **Priority handling**: Esecuzione ordinata per priorità degli handler
-- **Error isolation**: Failure di un handler non compromette gli altri
+- **Elaborazione asincrona**: Gestione asincrona degli eventi per performance
+- **Gestione priorità**: Esecuzione ordinata per priorità degli handler
+- **Isolamento degli errori**: Failure di un handler non compromette gli altri
 - **Thread safety**: Operazioni concurrent-safe per ambiente multi-threaded
 
-### Mediator Pattern - Decoupling Comunicazione
+### Mediator Pattern - Decoupling della Comunicazione
 
 Il `GameMediator` implementa il Mediator Pattern per request/response:
 
@@ -337,7 +337,7 @@ public sealed class Mediator(IServiceProvider serviceProvider) : IMediator
     public async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
     {
         var handler = _serviceProvider.GetService(handlerType) ??
-            throw new InvalidOperationException($"No handler registered for request type {requestType.Name}");
+            throw new InvalidOperationException($"Nessun handler registrato per il tipo di richiesta {requestType.Name}");
             
         return await ((Task<TResponse>)method.Invoke(handler, [request, cancellationToken]));
     }
@@ -369,9 +369,9 @@ public sealed class GameFactory(...) : IGameFactory
 ```
 
 La factory garantisce:
-- **Consistent creation**: Oggetti sempre creati con dipendenze corrette
-- **Validation**: Controlli di validità centralizzati
-- **Dependency resolution**: Gestione automatica delle dipendenze
+- **Creazione consistente**: Oggetti sempre creati con dipendenze corrette
+- **Validazione**: Controlli di validità centralizzati
+- **Risoluzione delle dipendenze**: Gestione automatica delle dipendenze
 
 ---
 
@@ -394,13 +394,13 @@ public class SoundManager : ISoundManager
 ```
 
 Il sistema audio supporta:
-- **Strategy switching**: Cambio runtime tra audio attivo e silenzioso
-- **Async operations**: Riproduzione non-bloccante per mantenere performance
+- **Strategy switching**: Cambio a runtime tra audio attivo e silenzioso
+- **Operazioni asincrone**: Riproduzione non-bloccante per mantenere performance
 - **Event-driven**: Risposta automatica agli eventi di gioco
 
 ### Persistence System - Gestione Dati
 
-Il sistema di persistenza implementa **Repository** e **Unit of Work** patterns:
+Il sistema di persistenza implementa i pattern **Repository** e **Unit of Work**:
 
 ```csharp
 public class FileRecordRepository : IRecordRepository
@@ -421,9 +421,9 @@ public class FileRecordRepository : IRecordRepository
 ```
 
 La persistenza fornisce:
-- **Abstraction**: Logica di storage nascosta dietro interfacce
-- **Atomic operations**: Transazioni per operazioni multi-step
-- **Error handling**: Gestione robusta di errori I/O
+- **Astrazione**: Logica di storage nascosta dietro interfacce
+- **Operazioni atomiche**: Transazioni per operazioni multi-step
+- **Gestione errori**: Gestione robusta di errori I/O
 
 ### Console Abstraction - Input/Output Unificato
 
@@ -440,9 +440,9 @@ public interface IConsoleService
 ```
 
 L'astrazione console permette:
-- **Testability**: Mock dell'input/output per unit tests
+- **Testabilità**: Mock dell'input/output per unit tests
 - **Cross-platform**: Potenziale supporto per diverse piattaforme
-- **Async initialization**: Setup non-bloccante delle risorse
+- **Inizializzazione asincrona**: Setup non-bloccante delle risorse
 
 ---
 
@@ -450,7 +450,7 @@ L'astrazione console permette:
 
 ### Rendering System - Visualizzazione Modulare
 
-Il sistema di rendering implementa **Template Method** e **Strategy** patterns:
+Il sistema di rendering implementa i pattern **Template Method** e **Strategy**:
 
 ```csharp
 public class ConsoleGameRenderer : IGameRenderer
@@ -468,13 +468,13 @@ public class ConsoleGameRenderer : IGameRenderer
 ```
 
 Il rendering system supporta:
-- **Modular drawing**: Componenti separati per diversi elementi di gioco
-- **Template rendering**: Uso di template per layout consistenti
-- **Performance optimization**: Rendering selettivo per minimizzare flickering
+- **Disegno modulare**: Componenti separati per diversi elementi di gioco
+- **Rendering tramite template**: Uso di template per layout consistenti
+- **Ottimizzazione delle performance**: Rendering selettivo per minimizzare il flickering
 
 ### Menu System - Navigazione Strutturata
 
-Il sistema di menu utilizza **Composite Pattern** per gestire UI complesse:
+Il sistema di menu utilizza il **Composite Pattern** per gestire UI complesse:
 
 ```csharp
 public class MenuRow
@@ -486,9 +486,9 @@ public class MenuRow
 ```
 
 Il menu system offre:
-- **Hierarchical structure**: Menu e sottomenu componibili
-- **Flexible styling**: Controllo granulare di colori e posizionamento
-- **Responsive layout**: Adattamento automatico a diverse dimensioni console
+- **Struttura gerarchica**: Menu e sottomenu componibili
+- **Stile flessibile**: Controllo granulare di colori e posizionamento
+- **Layout responsivo**: Adattamento automatico a diverse dimensioni della console
 
 ---
 
@@ -496,41 +496,41 @@ Il menu system offre:
 
 ### 1. Clean Architecture
 - **Separation of Concerns**: Ogni layer ha responsabilità specifiche
-- **Dependency Inversion**: Dipendenze puntano verso l'interno
-- **Testability**: Architettura facilitante unit e integration testing
+- **Dependency Inversion**: Le dipendenze puntano verso l'interno
+- **Testability**: Architettura che facilita unit e integration testing
 
 ### 2. Domain-Driven Design (DDD)
-- **Value Objects**: Modellazione di concetti di business immutabili
+- **Value Object**: Modellazione di concetti di business immutabili
 - **Domain Events**: Comunicazione di cambiamenti significativi
 - **Repository Pattern**: Astrazione dell'accesso ai dati
 
 ### 3. Event-Driven Architecture
-- **Event Sourcing elements**: Eventi come first-class citizens
+- **Elementi di Event Sourcing**: Eventi come first-class citizens
 - **Pub/Sub Pattern**: Disaccoppiamento attraverso eventi asincroni
-- **Event Aggregator**: Hub centralizzato per la gestione eventi
+- **Event Aggregator**: Hub centralizzato per la gestione degli eventi
 
 ### 4. Command Query Separation (CQS)
-- **Command Pattern**: Operazioni che modificano stato
+- **Command Pattern**: Operazioni che modificano lo stato
 - **Query Methods**: Operazioni di sola lettura
-- **Mediator Pattern**: Gestione uniforme di commands e queries
+- **Mediator Pattern**: Gestione uniforme di comandi e query
 
 ### 5. Strategy Pattern
 - **Audio Strategies**: Diversi comportamenti audio (sound/silent)
-- **Food Generation**: Algoritmi intercambiabili per posizionamento cibo
-- **Collision Detection**: Diversi algoritmi di collision detection
+- **Food Generation**: Algoritmi intercambiabili per il posizionamento del cibo
+- **Collision Detection**: Diversi algoritmi di rilevamento collisioni
 
 ### 6. State Machine Pattern
-- **Game States**: Gestione stati di gioco (Running, Paused, GameOver)
-- **Transition Logic**: Logica controllata per cambio stato
+- **Game States**: Gestione degli stati di gioco (Running, Paused, GameOver)
+- **Transition Logic**: Logica controllata per il cambio di stato
 - **State Encapsulation**: Comportamenti specifici per ogni stato
 
 ### 7. Factory Pattern
 - **Game Factory**: Creazione centralizzata di oggetti di gioco
 - **Abstract Factory**: Famiglie di oggetti correlati
-- **Builder Pattern elements**: Costruzione step-by-step di oggetti complessi
+- **Elementi di Builder Pattern**: Costruzione step-by-step di oggetti complessi
 
 ### 8. Observer Pattern
-- **Event Aggregator**: Notifica automatica di cambiamenti
+- **Event Aggregator**: Notifica automatica dei cambiamenti
 - **Domain Events**: Osservazione di eventi di business
 - **Reactive Extensions**: Reattività ai cambiamenti di stato
 
@@ -540,12 +540,12 @@ Il menu system offre:
 
 ### Flusso di Esecuzione Principale
 
-1. **Bootstrap**: Il `Program.cs` configura DI container e inizializza host
+1. **Bootstrap**: Il `Program.cs` configura il DI container e inizializza l'host
 2. **Engine Start**: `SnakeGameEngine` avvia il game loop principale
-3. **Session Management**: `GameSessionManager` gestisce singole partite
+3. **Session Management**: `GameSessionManager` gestisce le singole partite
 4. **Game Loop**: `GameRunner` esegue il ciclo render-input-update
-5. **Business Logic**: `GameLogic` processa regole di gioco e collisioni
-6. **Event Processing**: `EventAggregator` propaga eventi ai listeners
+5. **Business Logic**: `GameLogic` processa le regole di gioco e le collisioni
+6. **Event Processing**: `EventAggregator` propaga eventi ai listener
 7. **Presentation**: `ConsoleGameRenderer` aggiorna la visualizzazione
 
 ### Comunicazione Cross-Layer
@@ -580,44 +580,44 @@ Il progetto sfrutta le più recenti innovazioni del linguaggio:
 - **Primary Constructors**: Sintassi concisa per dependency injection
 - **Collection Expressions**: Inizializzazione elegante di collezioni con `[]`
 - **Pattern Matching**: Switch expressions per logica decisionale
-- **Record Types**: Immutabilità built-in per Value Objects e Events
+- **Record Type**: Immutabilità built-in per Value Object ed Eventi
 - **Global Using**: Semplificazione delle dichiarazioni using
 - **File-scoped Namespaces**: Riduzione dell'indentazione
 
 ### Performance e Ottimizzazioni
 
-- **Struct Value Objects**: Riduzione allocazioni heap per oggetti frequenti
+- **Struct Value Object**: Riduzione delle allocazioni heap per oggetti frequenti
 - **Async/Await**: Operazioni non-bloccanti per I/O e rendering
 - **Concurrent Collections**: Thread-safety per scenari multi-threaded
-- **Object Pooling elements**: Riutilizzo di oggetti per performance
-- **Efficient Algorithms**: Algoritmi ottimizzati per collision detection
+- **Elementi di Object Pooling**: Riutilizzo di oggetti per le performance
+- **Algoritmi efficienti**: Algoritmi ottimizzati per il rilevamento collisioni
 
 ### Error Handling e Resilienza
 
 - **Exception Hierarchy**: Eccezioni tipizzate per diversi scenari
-- **Graceful Degradation**: Fallback behavior in caso di errori
+- **Graceful Degradation**: Comportamento di fallback in caso di errori
 - **Cancellation Token**: Supporto per operazioni cancellabili
-- **Defensive Programming**: Validation e null-checking sistematici
+- **Defensive Programming**: Validazione e null-checking sistematici
 
 ---
 
 ## 📊 Metriche e Qualità del Codice
 
 ### Separazione delle Responsabilità
-- **Domain Layer**: 15 classi (Value Objects, Events, Contracts)
+- **Domain Layer**: 15 classi (Value Object, Eventi, Contratti)
 - **Core Layer**: 25 classi (Game Engine, Physics, Configuration)
-- **Application Layer**: 20 classi (Services, Use Cases, Orchestration)
-- **Infrastructure Layer**: 18 classi (External Services, I/O, Persistence)
-- **Presentation Layer**: 12 classi (Rendering, UI Components)
+- **Application Layer**: 20 classi (Servizi, Use Case, Orchestrazione)
+- **Infrastructure Layer**: 18 classi (Servizi Esterni, I/O, Persistenza)
+- **Presentation Layer**: 12 classi (Rendering, Componenti UI)
 
 ### Astrazione e Interfacce
 - **90+ interfacce**: Quasi ogni componente pubblico ha un'interfaccia
 - **Dependency Inversion**: Nessuna dipendenza da implementazioni concrete
-- **Testability**: Ogni componente facilmente mockabile per testing
+- **Testabilità**: Ogni componente facilmente mockabile per il testing
 
 ### Immutabilità e Thread Safety
-- **Value Objects**: Tutti immutabili per design
-- **Record Types**: Eventi immutabili con structural equality
+- **Value Object**: Tutti immutabili per design
+- **Record Type**: Eventi immutabili con structural equality
 - **Concurrent Collections**: Strutture dati thread-safe dove necessario
 - **Pure Functions**: Metodi senza side effects dove possibile
 
@@ -629,18 +629,18 @@ Il progetto sfrutta le più recenti innovazioni del linguaggio:
 
 Il sistema è progettato per essere facilmente estendibile:
 
-1. **Nuovi Game Elements**: Aggiunta di power-ups, nemici, bonus
-2. **Algoritmi AI**: Implementazione di bot players
-3. **Multiplayer Support**: Estensione per gioco multi-giocatore
-4. **Different Renderers**: Web, WPF, mobile renderers
-5. **Persistence Backends**: Database, cloud storage, cache
-6. **Input Methods**: Gamepad, touch, network input
+1. **Nuovi Game Element**: Aggiunta di power-up, nemici, bonus
+2. **Algoritmi AI**: Implementazione di bot player
+3. **Supporto Multiplayer**: Estensione per gioco multi-giocatore
+4. **Renderers diversi**: Web, WPF, mobile renderer
+5. **Persistence Backend**: Database, cloud storage, cache
+6. **Metodi di Input**: Gamepad, touch, network input
 
 ### Modalità di Estensione
 
 - **Strategy Pattern**: Nuovi algoritmi intercambiabili
 - **Event System**: Nuovi handler per eventi esistenti
-- **Dependency Injection**: Sostituzione servizi esistenti
+- **Dependency Injection**: Sostituzione di servizi esistenti
 - **Interface Segregation**: Implementazione parziale di funzionalità
 - **Composition**: Combinazione di comportamenti esistenti
 
@@ -651,23 +651,23 @@ Il sistema è progettato per essere facilmente estendibile:
 Il progetto **Snake Game Enterprise** rappresenta un esempio eccellente di come i principi dell'ingegneria software moderna possano essere applicati anche a progetti apparentemente semplici. L'architettura implementata dimostra:
 
 ### Punti di Forza
-- **Scalabilità**: Architettura che supporta crescita di complessità
+- **Scalabilità**: Architettura che supporta la crescita della complessità
 - **Manutenibilità**: Codice organizzato e facilmente comprensibile
-- **Testabilità**: Struttura che facilita testing automatizzato
+- **Testabilità**: Struttura che facilita il testing automatizzato
 - **Riusabilità**: Componenti modulari riutilizzabili in altri contesti
-- **Performance**: Ottimizzazioni per gaming real-time
+- **Performance**: Ottimizzazioni per il gaming real-time
 
 ### Lezioni Apprese
-- **Over-engineering awareness**: Bilanciamento tra robustezza e semplicità
-- **Pattern application**: Uso appropriato di design patterns
-- **Modern C# features**: Sfruttamento delle novità linguistiche
-- **Clean code principles**: Codice leggibile e auto-documentante
+- **Consapevolezza dell'over-engineering**: Bilanciamento tra robustezza e semplicità
+- **Applicazione dei pattern**: Uso appropriato dei design pattern
+- **Funzionalità moderne di C#**: Sfruttamento delle novità linguistiche
+- **Principi di clean code**: Codice leggibile e auto-documentante
 
 ### Valore Formativo
 Questo progetto serve come:
-- **Reference implementation**: Esempio di architettura enterprise
-- **Learning platform**: Studio di design patterns in azione
-- **Best practices showcase**: Dimostrazione di principi SOLID
+- **Implementazione di riferimento**: Esempio di architettura enterprise
+- **Piattaforma di apprendimento**: Studio dei design pattern in azione
+- **Vetrina di best practice**: Dimostrazione dei principi SOLID
 - **Modern .NET**: Utilizzo di tecnologie e linguaggi aggiornati
 
-Il sistema dimostra che anche un gioco semplice può beneficiare di un'architettura sofisticata, risultando in un codebase maintainable, testable ed extensible che può servire come base per progetti più complessi o come piattaforma di apprendimento per sviluppatori che vogliono approfondire i principi dell'architettura software moderna.
+Il sistema dimostra che anche un gioco semplice può beneficiare di un'architettura sofisticata, risultando in un codebase manutenibile, testabile ed estendibile che può servire come base per progetti più complessi o come piattaforma di apprendimento per sviluppatori che vogliono approfondire i principi dell'architettura software moderna.
