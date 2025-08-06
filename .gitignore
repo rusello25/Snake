@@ -1,0 +1,10 @@
+﻿################################################################################
+# Il file gitignore è stato creato automaticamente da Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/CopilotSnapshots
+/.vs
+/TestSnake/bin
+/TestSnake/obj
+/TestSnake/Properties/PublishProfiles/FolderProfile.pubxml.user
+/TestSnake/Snake.csproj.user
